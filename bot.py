@@ -4,6 +4,8 @@ import json
 import time
 import random
 import requests
+import asyncio
+import websockets
 from colorama import *
 from datetime import datetime
 
@@ -27,7 +29,8 @@ class PrickTod:
         print(f"{hitam}[{now}]{reset} {message}")
 
     def add_energy(self, id, ua, amount):
-        url = "https://wss://api.prick.lol/ws"  # Make sure this endpoint is correct
+        # Correct endpoint and method
+        url = "https://api.prick.lol/v1/energy/add"
         headers = {
             "Accept-Language": "en,en-US;q=0.9",
             "authorization": f"Bearer {id}",
@@ -46,6 +49,16 @@ class PrickTod:
         else:
             self.log(f"{merah}Failed to add energy: {res.text}")
             return None
+
+    async def send_data(self, uri, data):
+        async with websockets.connect(uri) as websocket:
+            json_data = json.dumps(data)
+            await websocket.send(json_data)
+            self.log(f"Sent: {json_data}")
+
+            # Optionally, receive and print the response
+            response = await websocket.recv()
+            self.log(f"Received: {response}")
 
     def main(self):
         banner = f"""
@@ -87,6 +100,14 @@ class PrickTod:
             if new_energy is not None:
                 self.log(f"{hijau}energy added successfully!")
                 self.log(f"{putih}new energy : {hijau}{new_energy}")
+                # Send data via WebSocket
+                data = {
+                    "id": id,
+                    "new_energy": new_energy,
+                    "timestamp": datetime.now().isoformat()
+                }
+                uri = "wss://api.prick.lol/ws"  # Replace with actual WebSocket URI
+                asyncio.get_event_loop().run_until_complete(self.send_data(uri, data))
             print("~" * 50)
 
 
