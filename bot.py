@@ -27,7 +27,7 @@ class PrickTod:
         print(f"{hitam}[{now}]{reset} {message}")
 
     def add_energy(self, id, ua, amount):
-        url = "https://api.prick.lol/v1/energy/add"  # Make sure this endpoint is correct
+        url = "https://wss://api.prick.lol/ws"  # Make sure this endpoint is correct
         headers = {
             "Accept-Language": "en,en-US;q=0.9",
             "authorization": f"Bearer {id}",
