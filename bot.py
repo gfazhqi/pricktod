@@ -175,8 +175,8 @@ class PrickTod:
                         self.countdown(10)
                     break
 
-            if energy <= 100 and free_energy_refill > 0:
-                energy, free_energy_refill = self.active_refill_energy(id, user_agent)
+            if energy <= 0 and add_energy > 100000000:
+                energy, add_energy = self.active_refill_energy(id, user_agent)
                 self.log(f"{hijau}refill energy successfully !")
                 continue
 
