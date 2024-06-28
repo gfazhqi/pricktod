@@ -112,17 +112,6 @@ class PrickTod:
             if energy == 0:
                 return
 
-            if (taps * 50) > energy:
-                taps = int(energy / 50)
-
-            list_taps = [round(time.time() * 1000) for _ in range(taps)]
-            data = {"action": "tap", "data": list_taps}
-            try:
-                ws.send(json.dumps(data))
-            except _exceptions.WebSocketConnectionClosedException:
-                self.log(f"{merah}connection close from server !")
-                return False
-
             for i in range(2):
                 try:
                     res = ws.recv()
