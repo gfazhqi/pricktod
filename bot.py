@@ -53,21 +53,6 @@ class PrickTod:
         refill_energy = res.json()["result"]["energy"]
         return refill_energy, free_refill_left
 
-    def active_turbo(self, id, ua):
-        url = "https://api.prick.lol/v1/boost/turbo"
-        headers = {
-            "Accept-Language": "en,en-US;q=0.9",
-            "authorization": f"Bearer {id}",
-            "User-Agent": ua,
-            "X-Requested-With": "org.telegram.messenger",
-        }
-        res = requests.put(url, headers=headers)
-        open(".http_logs.log", "a").write(res.text + "\n")
-        end_free_turbo = res.json()["result"]["turboEndedAt"].replace("Z", "")
-        free_turbo_left = res.json()["result"]["freeTurbo"]
-        end_format = round(datetime.fromisoformat(end_free_turbo).timestamp())
-        return free_turbo_left, end_format
-
     def game(self, id):
         list_useragent = [
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
@@ -127,18 +112,6 @@ class PrickTod:
             if energy == 0:
                 return
 
-            if free_turbo > 0:
-                if is_turbo is False:
-                    free_turbo, end_turbo = self.active_turbo(id, user_agent)
-                    self.log(f"{hijau}active turbo successfully !")
-                    start_turbo = int(time.time())
-                    is_turbo = True
-
-                if (int(time.time()) - start_turbo) >= 60:
-                    is_turbo = False
-                    start_turbo = 0
-
-            taps = random.randint(12, 20)
             if (taps * 50) > energy:
                 taps = int(energy / 50)
 
