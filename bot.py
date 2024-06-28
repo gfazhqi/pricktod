@@ -27,7 +27,7 @@ class PrickTod:
         print(f"{hitam}[{now}]{reset} {message}")
 
     def add_energy(self, id, ua, amount):
-        url = "https://api.prick.lol/v1/boost/add-energy"
+        url = "https://api.prick.lol/v1/energy/add"  # Make sure this endpoint is correct
         headers = {
             "Accept-Language": "en,en-US;q=0.9",
             "authorization": f"Bearer {id}",
@@ -37,7 +37,7 @@ class PrickTod:
         data = {
             "amount": amount
         }
-        res = requests.put(url, headers=headers, json=data)
+        res = requests.post(url, headers=headers, json=data)
         open(".http_logs.log", "a").write(res.text + "\n")
         if res.status_code == 200:
             response = res.json()
